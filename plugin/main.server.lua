@@ -27,11 +27,19 @@ local REPO_CONFIG = {
 
 -- Helper function for notifications
 local function notify(message, duration)
-    StarterGui:SetCore("SendNotification", {
-        Title = "TeleportSystem Plugin";
-        Text = message;
-        Duration = duration or 5;
-    })
+    -- Use pcall to handle Studio environment differences
+    local success = pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = "TeleportSystem Plugin";
+            Text = message;
+            Duration = duration or 5;
+        })
+    end)
+    
+    if not success then
+        -- Fallback to print in Studio
+        print("🔔 " .. message)
+    end
 end
 
 -- Load source from repository files
