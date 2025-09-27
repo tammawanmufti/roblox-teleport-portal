@@ -342,5 +342,6 @@ installButton.Click:Connect(installTeleportSystem)
 exampleButton.Click:Connect(createExamplePortals)
 
 print("🔌 TeleportSystem Repository Plugin loaded!")
-print("📦 Version: " .. REPO_CONFIG.version)
+print("📦 Version: " .. REPO_CONFIG.version)  
 print("💡 Click 'Install TeleportSystem' to get started!")
+print("🚀 UPDATE SUCCESS - Plugin reloaded with latest code!")
