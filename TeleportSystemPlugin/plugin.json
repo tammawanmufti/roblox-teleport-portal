@@ -1,0 +1,7 @@
+{
+    "name": "TeleportSystem Plugin",
+    "id": "TeleportSystemInstaller",
+    "description": "One-click teleport system installer for Roblox games",
+    "author": "GitHub Copilot",
+    "version": "1.0.0"
+}

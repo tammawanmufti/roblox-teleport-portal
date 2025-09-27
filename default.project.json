@@ -1,0 +1,20 @@
+{
+    "name": "TeleportSystem",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "TeleportSystem": {
+                "$className": "ModuleScript",
+                "$path": "TeleportSystem.lua"
+            }
+        },
+        "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "TeleportSystemManager": {
+                "$className": "ServerScript",
+                "$path": "ServerScriptService/TeleportSystemManager.lua"
+            }
+        }
+    }
+}
