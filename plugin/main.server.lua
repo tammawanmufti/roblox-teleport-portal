@@ -293,6 +293,8 @@ local function installTeleportSystem()
         if existingModule then
             existingModule:Destroy()
             print("🔄 Removed existing TeleportSystem module")
+            -- Small delay to ensure cleanup
+            wait(0.1)
         end
         
         local moduleScript = Instance.new("ModuleScript")
@@ -300,6 +302,9 @@ local function installTeleportSystem()
         moduleScript.Source = loadSourceFromRepo("TeleportSystem")
         moduleScript.Parent = replicatedStorage
         print("✅ TeleportSystem ModuleScript installed")
+        
+        -- Small delay before creating manager
+        wait(0.1)
         
         -- 3. Install Manager Script in ServerScriptService (AFTER folder exists)
         local serverScriptService = game:GetService("ServerScriptService")
@@ -310,7 +315,8 @@ local function installTeleportSystem()
             print("🔄 Removed existing manager")
         end
         
-        local managerScript = Instance.new("ServerScript")
+        -- Use regular Script instead of ServerScript
+        local managerScript = Instance.new("Script")
         managerScript.Name = "TeleportSystemManager"
         managerScript.Source = loadSourceFromRepo("Manager")
         managerScript.Parent = serverScriptService
