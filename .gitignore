@@ -1,0 +1,27 @@
+# Logs
+*.log
+
+# Roblox Studio temporary files
+*.rbxlx.lock
+*.rbxl.lock
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Development files
+/dev/
+/test/
+/temp/
+
+# Node modules (if any)
+node_modules/

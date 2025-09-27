@@ -1,0 +1,7 @@
+{
+    "name": "TeleportSystem Plugin",
+    "id": "TeleportSystem",
+    "description": "Complete teleport portal system with auto-installation",
+    "author": "GitHub Copilot",
+    "version": "2.0.0"
+}

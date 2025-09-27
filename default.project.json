@@ -6,14 +6,14 @@
             "$className": "ReplicatedStorage",
             "TeleportSystem": {
                 "$className": "ModuleScript",
-                "$path": "TeleportSystem.lua"
+                "$path": "src/ReplicatedStorage/TeleportSystem.lua"
             }
         },
         "ServerScriptService": {
             "$className": "ServerScriptService",
             "TeleportSystemManager": {
                 "$className": "ServerScript",
-                "$path": "ServerScriptService/TeleportSystemManager.lua"
+                "$path": "src/ServerScriptService/TeleportSystemManager.lua"
             }
         }
     }

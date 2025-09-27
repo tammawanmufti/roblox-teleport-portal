@@ -1,0 +1,27 @@
+{
+    "name": "roblox-teleportsystem",
+    "description": "Professional teleport portal system for Roblox Studio",
+    "version": "2.0.0",
+    "author": "GitHub Copilot",
+    "main": "plugin/main.server.lua",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourname/roblox-teleportsystem.git"
+    },
+    "keywords": [
+        "roblox", 
+        "plugin", 
+        "teleport", 
+        "portal", 
+        "studio", 
+        "game-development"
+    ],
+    "license": "MIT",
+    "files": [
+        "plugin/",
+        "src/",
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md"
+    ]
+}
