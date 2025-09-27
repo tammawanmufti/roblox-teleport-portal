@@ -17,13 +17,25 @@ local exampleButton = toolbar:CreateButton(
     "Create example portals to get started",
     "rbxasset://textures/ui/GuiImagePlaceholder.png"
 )
+local reloadButton = toolbar:CreateButton(
+    "🔄 Reload Plugin",
+    "Reload plugin to get latest updates",
+    "rbxasset://textures/ui/GuiImagePlaceholder.png"
+)
 
 -- Repository configuration
 local REPO_CONFIG = {
     version = "2.0.0"
 }
 
--- Helper function for notifications
+-- Reload plugin function
+local function reloadPlugin()
+    print("🔄 Reloading plugin...")
+    notify("🔄 Reloading plugin...", 2)
+    
+    -- Unload plugin (this will cause it to reload)
+    plugin:Destroy()
+end
 local function notify(message, duration)
     -- Use pcall to handle Studio environment differences
     local success = pcall(function()
@@ -340,8 +352,10 @@ installButton.Click:Connect(installTeleportSystem)
 -- Connect buttons
 installButton.Click:Connect(installTeleportSystem)
 exampleButton.Click:Connect(createExamplePortals)
+reloadButton.Click:Connect(reloadPlugin)
 
 print("🔌 TeleportSystem Repository Plugin loaded!")
 print("📦 Version: " .. REPO_CONFIG.version)  
 print("💡 Click 'Install TeleportSystem' to get started!")
 print("🚀 UPDATE SUCCESS - Plugin reloaded with latest code!")
+print("⏰ Loaded at: " .. os.date("%H:%M:%S"))
