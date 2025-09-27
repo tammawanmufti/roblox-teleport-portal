@@ -54,36 +54,170 @@ local function loadSourceFromRepo(fileName)
         error("Source file not found: " .. fileName)
     end
     
-    -- Navigate to source file
-    local pathParts = {}
-    for part in string.gmatch(filePath, "[^/]+") do
-        table.insert(pathParts, part)
-    end
+    -- Build full path to source file in plugin directory
+    local repoPath = REPO_CONFIG.repoPath
+    local fullPath = repoPath.Parent.Name .. "/" .. filePath  -- plugin folder name + path
     
-    local currentObj = REPO_CONFIG.repoPath
-    for i, part in ipairs(pathParts) do
-        if i == #pathParts then
-            -- Last part - look for source file (remove .lua extension)
-            local luaFileName = part:gsub("%.lua$", "")
-            local sourceObj = currentObj:FindFirstChild(luaFileName)
-            
-            if sourceObj then
-                if sourceObj:IsA("StringValue") then
-                    return sourceObj.Value
-                elseif sourceObj:IsA("ModuleScript") or sourceObj:IsA("Script") or sourceObj:IsA("LocalScript") then
-                    return sourceObj.Source
-                end
-            end
-        else
-            if currentObj then
-                currentObj = currentObj:FindFirstChild(part)
-                if not currentObj then 
-                    break 
-                end
-            else
-                break
+    print("🔍 Looking for source file: " .. fullPath)
+    
+    -- For Roblox Studio plugins, source files need to be read differently
+    -- We'll embed the source directly in the plugin for now
+    
+    if fileName == "TeleportSystem" then
+        return [[
+-- TeleportSystem.lua - Modular Teleport System v2.0
+local TeleportSystem = {}
+TeleportSystem.__index = TeleportSystem
+
+-- Services
+local Players = game:GetService("Players")
+
+-- Constructor
+function TeleportSystem.new(config)
+    local self = setmetatable({}, TeleportSystem)
+    
+    self.triggerPart = config.triggerPart
+    self.destinationName = config.destinationName
+    self.cooldowns = {}
+    self.cooldownTime = config.cooldownTime or 2
+    
+    self:setupTeleport()
+    return self
+end
+
+-- Setup teleport functionality
+function TeleportSystem:setupTeleport()
+    self.triggerPart.Touched:Connect(function(hit)
+        local humanoid = hit.Parent:FindFirstChild("Humanoid")
+        if humanoid then
+            local player = Players:GetPlayerFromCharacter(hit.Parent)
+            if player then
+                self:teleportPlayer(player)
             end
         end
+    end)
+end
+
+-- Teleport player
+function TeleportSystem:teleportPlayer(player)
+    local playerId = player.UserId
+    local currentTime = tick()
+    
+    if self.cooldowns[playerId] and currentTime - self.cooldowns[playerId] < self.cooldownTime then
+        return
+    end
+    
+    self.cooldowns[playerId] = currentTime
+    
+    local character = player.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+        return
+    end
+    
+    local destination = self:findDestination()
+    if destination then
+        character.HumanoidRootPart.CFrame = destination.CFrame + Vector3.new(0, 5, 0)
+        print("🌀 " .. player.Name .. " teleported!")
+    else
+        warn("⚠️ Destination not found for portal: " .. self.triggerPart.Name)
+    end
+end
+
+-- Find destination
+function TeleportSystem:findDestination()
+    local triggerFolder = self.triggerPart.Parent
+    local teleportSystemFolder = triggerFolder.Parent
+    
+    -- First try same folder
+    local sameFolder = triggerFolder:FindFirstChild(self.destinationName)
+    if sameFolder then
+        return sameFolder
+    end
+    
+    -- Then try other folders
+    for _, folder in pairs(teleportSystemFolder:GetChildren()) do
+        if folder:IsA("Folder") and folder ~= triggerFolder then
+            local destination = folder:FindFirstChild(self.destinationName)
+            if destination then
+                return destination
+            end
+        end
+    end
+    
+    return nil
+end
+
+return TeleportSystem
+]]
+    elseif fileName == "Manager" then
+        return [[
+-- Wait for TeleportSystem to be installed
+local function waitForTeleportSystem()
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    local teleportSystem = replicatedStorage:WaitForChild("TeleportSystem", 10)
+    
+    if not teleportSystem then
+        warn("⚠️ TeleportSystem not found! Please install it using the plugin.")
+        return
+    end
+    
+    return require(teleportSystem)
+end
+
+-- Wait for TeleportSystem folder in workspace
+local function waitForTeleportSystemFolder()
+    local workspace = game.Workspace
+    local teleportSystemFolder = workspace:WaitForChild("TeleportSystem", 10)
+    
+    if not teleportSystemFolder then
+        warn("⚠️ TeleportSystem folder not found in Workspace!")
+        return
+    end
+    
+    return teleportSystemFolder
+end
+
+-- Initialize system
+local function initializePortals()
+    local TeleportSystem = waitForTeleportSystem()
+    local teleportSystemFolder = waitForTeleportSystemFolder()
+    
+    if not TeleportSystem or not teleportSystemFolder then
+        return
+    end
+    
+    -- Count existing portals
+    local portalCount = 0
+    local portalsInitialized = 0
+    
+    for _, folder in pairs(teleportSystemFolder:GetChildren()) do
+        if folder:IsA("Folder") and folder:FindFirstChild("PortalEntry") then
+            portalCount = portalCount + 1
+            TeleportSystem.new({
+                triggerPart = folder.PortalEntry,
+                destinationName = "PortalDestination"
+            })
+            portalsInitialized = portalsInitialized + 1
+        end
+    end
+    
+    -- Show appropriate message based on portal count
+    if portalCount > 0 then
+        print("🎉 " .. portalCount .. " portal(s) ready! Touch to teleport!")
+    else
+        print("📋 No portals found. Here's how to create them:")
+        print("   1️⃣ Create a Folder in Workspace > TeleportSystem")
+        print("   2️⃣ Add a Part named 'PortalEntry' (players touch this)")
+        print("   3️⃣ Add a Part named 'PortalDestination' (teleport location)")
+        print("   4️⃣ Repeat for other portals - they'll auto-pair!")
+        print("   💡 Example: PortalA ↔ PortalB, PortalC ↔ PortalD")
+        print("   🔄 Portals in same folder teleport to each other")
+    end
+end
+
+-- Start initialization
+initializePortals()
+]]
     end
     
     error("Could not load source: " .. filePath)
