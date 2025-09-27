@@ -12,6 +12,11 @@ local installButton = toolbar:CreateButton(
     "Install complete teleport system from repository",
     "rbxasset://textures/ui/GuiImagePlaceholder.png"
 )
+local exampleButton = toolbar:CreateButton(
+    "Create Example Portals",
+    "Create example portals to get started",
+    "rbxasset://textures/ui/GuiImagePlaceholder.png"
+)
 
 -- Repository configuration
 local REPO_CONFIG = {
@@ -89,14 +94,20 @@ local function createExamplePortals()
     local workspace = game.Workspace
     local teleportSystemFolder = workspace:FindFirstChild("TeleportSystem")
     
-    if teleportSystemFolder then
-        print("📁 TeleportSystem folder already exists")
-        return
+    if not teleportSystemFolder then
+        teleportSystemFolder = Instance.new("Folder")
+        teleportSystemFolder.Name = "TeleportSystem"
+        teleportSystemFolder.Parent = workspace
+        print("📁 Created TeleportSystem folder")
     end
     
-    teleportSystemFolder = Instance.new("Folder")
-    teleportSystemFolder.Name = "TeleportSystem"
-    teleportSystemFolder.Parent = workspace
+    -- Check if examples already exist
+    local hasExamples = teleportSystemFolder:FindFirstChild("PortalA") or teleportSystemFolder:FindFirstChild("PortalB")
+    if hasExamples then
+        print("📋 Example portals already exist!")
+        notify("📋 Example portals already exist!", 3)
+        return
+    end
     
     local function createPortal(name, position, color)
         local folder = Instance.new("Folder")
@@ -132,6 +143,24 @@ local function createExamplePortals()
     
     createPortal("PortalA", Vector3.new(-20, 10, 0), Color3.new(0, 0.5, 1))
     createPortal("PortalB", Vector3.new(20, 10, 0), Color3.new(0, 1, 0.5))
+    
+    print("✨ Example portals created! Touch to test!")
+    notify("✨ Example portals created! Touch to test!", 5)
+end
+
+-- Ensure TeleportSystem folder exists (minimal setup)
+local function ensureTeleportSystemFolder()
+    local workspace = game.Workspace
+    local teleportSystemFolder = workspace:FindFirstChild("TeleportSystem")
+    
+    if not teleportSystemFolder then
+        teleportSystemFolder = Instance.new("Folder")
+        teleportSystemFolder.Name = "TeleportSystem"
+        teleportSystemFolder.Parent = workspace
+        print("📁 Created TeleportSystem folder")
+    end
+    
+    return teleportSystemFolder
 end
 
 -- Main installation function
@@ -140,8 +169,8 @@ local function installTeleportSystem()
     notify("🚀 Installing TeleportSystem...", 3)
     
     local success, error = pcall(function()
-        -- 1. Create example portals FIRST (before installing manager)
-        createExamplePortals()
+        -- 1. Ensure TeleportSystem folder exists (but don't create example portals)
+        ensureTeleportSystemFolder()
         
         -- 2. Install ModuleScript in ReplicatedStorage
         local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -175,9 +204,9 @@ local function installTeleportSystem()
         
         print("🎉 TeleportSystem installation complete!")
         print("📦 Version: " .. REPO_CONFIG.version)
-        print("💡 Touch portal parts to teleport!")
+        print("💡 Use 'Create Example Portals' button to get started!")
         
-        notify("✅ Installation complete! Check Workspace > TeleportSystem", 5)
+        notify("✅ Installation complete! Click 'Create Example Portals' to start", 6)
     end)
     
     if not success then
@@ -186,8 +215,11 @@ local function installTeleportSystem()
     end
 end
 
--- Connect button
+-- Connect buttons
 installButton.Click:Connect(installTeleportSystem)
+-- Connect buttons
+installButton.Click:Connect(installTeleportSystem)
+exampleButton.Click:Connect(createExamplePortals)
 
 print("🔌 TeleportSystem Repository Plugin loaded!")
 print("📦 Version: " .. REPO_CONFIG.version)

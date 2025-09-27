@@ -33,19 +33,33 @@ local function initializePortals()
         return
     end
     
-    print("🌟 Initializing teleport portals...")
+    -- Count existing portals
+    local portalCount = 0
+    local portalsInitialized = 0
     
     for _, folder in pairs(teleportSystemFolder:GetChildren()) do
         if folder:IsA("Folder") and folder:FindFirstChild("PortalEntry") then
+            portalCount = portalCount + 1
             TeleportSystem.new({
                 triggerPart = folder.PortalEntry,
                 destinationName = "PortalDestination"
             })
-            print("✨ Portal initialized: " .. folder.Name)
+            portalsInitialized = portalsInitialized + 1
         end
     end
     
-    print("🎉 All portals ready!")
+    -- Show appropriate message based on portal count
+    if portalCount > 0 then
+        print("🎉 " .. portalCount .. " portal(s) ready! Touch to teleport!")
+    else
+        print("📋 No portals found. Here's how to create them:")
+        print("   1️⃣ Create a Folder in Workspace > TeleportSystem")
+        print("   2️⃣ Add a Part named 'PortalEntry' (players touch this)")
+        print("   3️⃣ Add a Part named 'PortalDestination' (teleport location)")
+        print("   4️⃣ Repeat for other portals - they'll auto-pair!")
+        print("   💡 Example: PortalA ↔ PortalB, PortalC ↔ PortalD")
+        print("   🔄 Portals in same folder teleport to each other")
+    end
 end
 
 -- Start initialization
