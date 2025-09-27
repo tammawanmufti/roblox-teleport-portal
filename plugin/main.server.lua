@@ -58,19 +58,26 @@ local function loadSourceFromRepo(fileName)
     local currentObj = REPO_CONFIG.repoPath
     for i, part in ipairs(pathParts) do
         if i == #pathParts then
-            -- Last part - look for StringValue or ModuleScript
-            local sourceObj = currentObj:FindFirstChild(part:gsub("%.lua$", ""))
+            -- Last part - look for source file (remove .lua extension)
+            local luaFileName = part:gsub("%.lua$", "")
+            local sourceObj = currentObj:FindFirstChild(luaFileName)
+            
             if sourceObj then
                 if sourceObj:IsA("StringValue") then
                     return sourceObj.Value
-                elseif sourceObj:IsA("ModuleScript") then
-                    -- Read ModuleScript source
+                elseif sourceObj:IsA("ModuleScript") or sourceObj:IsA("Script") or sourceObj:IsA("LocalScript") then
                     return sourceObj.Source
                 end
             end
         else
-            currentObj = currentObj:FindFirstChild(part)
-            if not currentObj then break end
+            if currentObj then
+                currentObj = currentObj:FindFirstChild(part)
+                if not currentObj then 
+                    break 
+                end
+            else
+                break
+            end
         end
     end
     
@@ -133,7 +140,10 @@ local function installTeleportSystem()
     notify("🚀 Installing TeleportSystem...", 3)
     
     local success, error = pcall(function()
-        -- 1. Install ModuleScript in ReplicatedStorage
+        -- 1. Create example portals FIRST (before installing manager)
+        createExamplePortals()
+        
+        -- 2. Install ModuleScript in ReplicatedStorage
         local replicatedStorage = game:GetService("ReplicatedStorage")
         local existingModule = replicatedStorage:FindFirstChild("TeleportSystem")
         
@@ -148,7 +158,7 @@ local function installTeleportSystem()
         moduleScript.Parent = replicatedStorage
         print("✅ TeleportSystem ModuleScript installed")
         
-        -- 2. Install Manager Script in ServerScriptService
+        -- 3. Install Manager Script in ServerScriptService (AFTER folder exists)
         local serverScriptService = game:GetService("ServerScriptService")
         local existingManager = serverScriptService:FindFirstChild("TeleportSystemManager")
         
@@ -162,9 +172,6 @@ local function installTeleportSystem()
         managerScript.Source = loadSourceFromRepo("Manager")
         managerScript.Parent = serverScriptService
         print("✅ TeleportSystemManager installed")
-        
-        -- 3. Create example portals
-        createExamplePortals()
         
         print("🎉 TeleportSystem installation complete!")
         print("📦 Version: " .. REPO_CONFIG.version)
