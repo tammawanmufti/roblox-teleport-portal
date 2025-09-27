@@ -20,14 +20,7 @@ local exampleButton = toolbar:CreateButton(
 
 -- Repository configuration
 local REPO_CONFIG = {
-    version = "2.0.0",
-    repoPath = script.Parent.Parent, -- Root of this repository
-    
-    -- Source files in Studio-like structure
-    sources = {
-        TeleportSystem = "src/ReplicatedStorage/TeleportSystem.lua",
-        Manager = "src/ServerScriptService/TeleportSystemManager.lua"
-    }
+    version = "2.0.0"
 }
 
 -- Helper function for notifications
@@ -49,20 +42,7 @@ end
 
 -- Load source from repository files
 local function loadSourceFromRepo(fileName)
-    local filePath = REPO_CONFIG.sources[fileName]
-    if not filePath then
-        error("Source file not found: " .. fileName)
-    end
-    
-    -- Build full path to source file in plugin directory
-    local repoPath = REPO_CONFIG.repoPath
-    local fullPath = repoPath.Parent.Name .. "/" .. filePath  -- plugin folder name + path
-    
-    print("🔍 Looking for source file: " .. fullPath)
-    
-    -- For Roblox Studio plugins, source files need to be read differently
-    -- We'll embed the source directly in the plugin for now
-    
+    -- Return embedded source code directly
     if fileName == "TeleportSystem" then
         return [[
 -- TeleportSystem.lua - Modular Teleport System v2.0
@@ -218,9 +198,9 @@ end
 -- Start initialization
 initializePortals()
 ]]
+    else
+        error("Unknown source file: " .. fileName)
     end
-    
-    error("Could not load source: " .. filePath)
 end
 
 -- Create example portal structure
