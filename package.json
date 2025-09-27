@@ -6,7 +6,7 @@
     "main": "plugin/main.server.lua",
     "repository": {
         "type": "git",
-        "url": "https://github.com/yourname/roblox-teleportsystem.git"
+        "url": "https://github.com/tammawanmufti/roblox-teleport-portal.git"
     },
     "keywords": [
         "roblox", 

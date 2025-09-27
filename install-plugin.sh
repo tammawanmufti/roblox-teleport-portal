@@ -25,7 +25,7 @@ if [ -d "$PLUGIN_PATH" ]; then
 else
     echo "📥 Installing plugin..."
     cd "$PLUGINS_DIR"
-    git clone https://github.com/yourname/roblox-teleportsystem.git TeleportSystem
+    git clone https://github.com/tammawanmufti/roblox-teleport-portal.git TeleportSystem
 fi
 
 echo "✅ Installation complete!"

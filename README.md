@@ -2,15 +2,20 @@
 
 Professional teleport portal system for Roblox with one-click Studio installation.
 
+**🚀 Proof of Concept - Public Repository**
+
 ## ⚡ Quick Start
 
 ### Installation
 ```bash
-# Clone to Roblox Plugins directory
+# Method 1: One-command install (Mac/Linux)
+curl -sSL https://raw.githubusercontent.com/tammawanmufti/roblox-teleport-portal/main/install-plugin.sh | bash
+
+# Method 2: Manual clone
 cd "~/Library/Application Support/Roblox/Plugins/"    # Mac
 # cd "%LOCALAPPDATA%\Roblox\Plugins\"                 # Windows
 
-git clone https://github.com/yourname/roblox-teleportsystem.git TeleportSystem
+git clone https://github.com/tammawanmufti/roblox-teleport-portal.git TeleportSystem
 ```
 
 ### Usage
@@ -58,7 +63,13 @@ Workspace/TeleportSystem/
 
 ## 👥 Team Usage
 
-Share repository URL → Everyone clones → Auto-sync updates via git pull
+```bash
+# Team members install
+git clone https://github.com/tammawanmufti/roblox-teleport-portal.git TeleportSystem
+
+# Everyone gets updates via
+git pull origin main
+```
 
 ## 📄 License
 

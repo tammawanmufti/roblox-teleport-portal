@@ -19,7 +19,7 @@ if exist "%PLUGIN_PATH%" (
 ) else (
     echo 📥 Installing plugin...
     cd /d "%PLUGINS_DIR%"
-    git clone https://github.com/yourname/roblox-teleportsystem.git TeleportSystem
+    git clone https://github.com/tammawanmufti/roblox-teleport-portal.git TeleportSystem
 )
 
 echo ✅ Installation complete!
